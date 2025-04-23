@@ -1,6 +1,6 @@
 # TestimonialNudger
 
-![TestimonialNudger](https://via.placeholder.com/1200x630/4F46E5/FFFFFF?text=TestimonialNudger)
+<img src="public/TestiomonialNudgerLogo.svg" alt="TestimonialNudger Logo" width="300" />
 
 TestimonialNudger is an AI-powered SaaS platform for automated testimonial collection. Designed for freelancers and small businesses, it removes the friction in gathering client feedback using personalized AI-generated prompts and a streamlined UI/UX.
 
@@ -73,6 +73,10 @@ The easiest way to deploy TestimonialNudger is with [Vercel](https://vercel.com)
 | `RESEND_API_KEY` | Resend API key for emails |
 | `CLAUDE_API_KEY` | Claude AI API key |
 | `NEXT_PUBLIC_APP_URL` | Public URL of your application |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary secret key |
+| `EMAIL_FROM` | The email address to send emails from |
 
 ## 📁 Project Structure
 
