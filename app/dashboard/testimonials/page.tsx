@@ -15,6 +15,9 @@ import {
   ChevronUp, 
   Search
 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { TableActions } from './table-actions';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 // Define the status types for testimonials
 type TestimonialStatus = 'PENDING' | 'APPROVED' | 'FLAGGED' | 'REJECTED';
@@ -173,6 +176,59 @@ export default function TestimonialsPage() {
     );
   };
 
+  // Render testimonial card for mobile view
+  const renderTestimonialCard = (testimonial: Testimonial) => {
+    return (
+      <Card key={testimonial.id} className="mb-4 overflow-hidden">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              {renderStarRating(testimonial.rating)}
+              <p className="text-sm text-gray-500 mt-1">
+                {new Date(testimonial.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              {renderStatusBadge(testimonial.status)}
+              <TableActions 
+                testimonialId={testimonial.id} 
+                currentStatus={testimonial.status === 'REJECTED' ? 'PENDING' : testimonial.status} 
+              />
+            </div>
+          </div>
+          
+          <div className="mb-4">
+            <p className="text-gray-800 line-clamp-3">{testimonial.content}</p>
+          </div>
+          
+          <div className="flex items-center">
+            {testimonial.mediaUrls && testimonial.mediaUrls.length > 0 ? (
+              <div className="mr-3">
+                <Image 
+                  src={testimonial.mediaUrls[0]} 
+                  alt={testimonial.clientName}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover"
+                />
+              </div>
+            ) : (
+              <Avatar className="mr-3 h-10 w-10">
+                <AvatarFallback>
+                  {testimonial.clientName.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            )}
+            <div>
+              <p className="font-medium">{testimonial.clientName}</p>
+              <p className="text-sm text-gray-600">{testimonial.serviceType}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[500px]">
@@ -183,11 +239,11 @@ export default function TestimonialsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Manage Testimonials</h1>
         <Link 
           href="/dashboard/request" 
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 w-full sm:w-auto text-center"
         >
           Request New
         </Link>
@@ -245,115 +301,130 @@ export default function TestimonialsPage() {
         </div>
       </div>
 
-      {/* Testimonials List */}
-      {sortedTestimonials.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-md shadow">
-          <p className="text-gray-500">No testimonials match your filters</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {sortedTestimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-white rounded-md shadow p-4">
-              <div className="flex flex-col md:flex-row justify-between mb-3">
-                <div>
-                  <div className="flex items-center mb-2">
-                    <h3 className="font-semibold mr-2">{testimonial.clientName}</h3>
-                    {testimonial.clientRole && (
-                      <span className="text-sm text-gray-500">{testimonial.clientRole}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-3 text-sm text-gray-500">
-                    <div>{renderStarRating(testimonial.rating)}</div>
-                    <div>•</div>
-                    <div>{testimonial.serviceType}</div>
-                    <div>•</div>
-                    <div>{new Date(testimonial.createdAt).toLocaleDateString()}</div>
-                  </div>
-                </div>
-                <div className="mt-2 md:mt-0">
-                  {renderStatusBadge(testimonial.status)}
-                </div>
-              </div>
-              
-              <p className="mb-3 text-gray-700">{testimonial.content}</p>
-              
-              {testimonial.mediaUrls && testimonial.mediaUrls.length > 0 && (
-                <div className="mb-3 flex flex-wrap gap-2">
-                  {testimonial.mediaUrls.map((url, index) => (
-                    <div 
-                      key={index} 
-                      className="relative h-20 w-20 rounded-md overflow-hidden"
-                    >
-                      <Image
-                        src={url} 
-                        alt={`Media from ${testimonial.clientName}`} 
-                        fill
-                        className="object-cover" 
-                      />
+      {/* Mobile Testimonials List */}
+      <div className="block md:hidden">
+        {sortedTestimonials.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-md shadow">
+            <p className="text-gray-500">No testimonials found</p>
+          </div>
+        ) : (
+          <div>
+            {sortedTestimonials.map(testimonial => renderTestimonialCard(testimonial))}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Testimonials Table */}
+      <div className="hidden md:block">
+        {sortedTestimonials.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-md shadow">
+            <p className="text-gray-500">No testimonials found</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sortedTestimonials.map((testimonial) => (
+              <div key={testimonial.id} className="bg-white rounded-md shadow p-4">
+                <div className="flex flex-col md:flex-row justify-between mb-3">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <h3 className="font-semibold mr-2">{testimonial.clientName}</h3>
+                      {testimonial.clientRole && (
+                        <span className="text-sm text-gray-500">{testimonial.clientRole}</span>
+                      )}
                     </div>
-                  ))}
+                    <div className="flex items-center space-x-3 text-sm text-gray-500">
+                      <div>{renderStarRating(testimonial.rating)}</div>
+                      <div>•</div>
+                      <div>{testimonial.serviceType}</div>
+                      <div>•</div>
+                      <div>{new Date(testimonial.createdAt).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+                  <div className="mt-2 md:mt-0">
+                    {renderStatusBadge(testimonial.status)}
+                  </div>
                 </div>
-              )}
-              
-              <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-gray-100">
-                {testimonial.status !== 'APPROVED' && (
-                  <button
-                    onClick={() => handleApprove(testimonial.id)}
-                    className="inline-flex items-center px-2 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200"
-                  >
-                    <Check className="h-4 w-4 mr-1" />
-                    Approve
-                  </button>
+                
+                <p className="mb-3 text-gray-700">{testimonial.content}</p>
+                
+                {testimonial.mediaUrls && testimonial.mediaUrls.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {testimonial.mediaUrls.map((url, index) => (
+                      <div 
+                        key={index} 
+                        className="relative h-20 w-20 rounded-md overflow-hidden"
+                      >
+                        <Image
+                          src={url} 
+                          alt={`Media from ${testimonial.clientName}`} 
+                          fill
+                          className="object-cover" 
+                        />
+                      </div>
+                    ))}
+                  </div>
                 )}
                 
-                {testimonial.status !== 'REJECTED' && testimonial.status !== 'FLAGGED' && (
+                <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-gray-100">
+                  {testimonial.status !== 'APPROVED' && (
+                    <button
+                      onClick={() => handleApprove(testimonial.id)}
+                      className="inline-flex items-center px-2 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200"
+                    >
+                      <Check className="h-4 w-4 mr-1" />
+                      Approve
+                    </button>
+                  )}
+                  
+                  {testimonial.status !== 'REJECTED' && testimonial.status !== 'FLAGGED' && (
+                    <button
+                      onClick={() => handleReject(testimonial.id)}
+                      className="inline-flex items-center px-2 py-1 text-sm bg-gray-100 text-gray-800 rounded hover:bg-gray-200"
+                    >
+                      <X className="h-4 w-4 mr-1" />
+                      Reject
+                    </button>
+                  )}
+                  
+                  {testimonial.status !== 'FLAGGED' && (
+                    <button
+                      onClick={() => handleFlag(testimonial.id)}
+                      className="inline-flex items-center px-2 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
+                    >
+                      <AlertTriangle className="h-4 w-4 mr-1" />
+                      Flag
+                    </button>
+                  )}
+                  
                   <button
-                    onClick={() => handleReject(testimonial.id)}
-                    className="inline-flex items-center px-2 py-1 text-sm bg-gray-100 text-gray-800 rounded hover:bg-gray-200"
+                    onClick={() => {}}
+                    className="inline-flex items-center px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
                   >
-                    <X className="h-4 w-4 mr-1" />
-                    Reject
+                    <Eye className="h-4 w-4 mr-1" />
+                    View
                   </button>
-                )}
-                
-                {testimonial.status !== 'FLAGGED' && (
+                  
                   <button
-                    onClick={() => handleFlag(testimonial.id)}
+                    onClick={() => {}}
+                    className="inline-flex items-center px-2 py-1 text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
+                  >
+                    <Pencil className="h-4 w-4 mr-1" />
+                    Edit
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDelete(testimonial.id)}
                     className="inline-flex items-center px-2 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
                   >
-                    <AlertTriangle className="h-4 w-4 mr-1" />
-                    Flag
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete
                   </button>
-                )}
-                
-                <button
-                  onClick={() => {}}
-                  className="inline-flex items-center px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200"
-                >
-                  <Eye className="h-4 w-4 mr-1" />
-                  View
-                </button>
-                
-                <button
-                  onClick={() => {}}
-                  className="inline-flex items-center px-2 py-1 text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
-                >
-                  <Pencil className="h-4 w-4 mr-1" />
-                  Edit
-                </button>
-                
-                <button
-                  onClick={() => handleDelete(testimonial.id)}
-                  className="inline-flex items-center px-2 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  Delete
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

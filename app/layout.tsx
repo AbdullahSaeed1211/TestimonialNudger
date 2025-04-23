@@ -2,6 +2,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import Navbar from './components/layout/Navbar';
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,10 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+    <html lang="en">
         <body className={inter.className}>
           <Navbar />
           <main>{children}</main>
+          <Toaster position="top-right" closeButton richColors />
           <footer className="bg-white border-t border-gray-200 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="md:flex md:items-center md:justify-between">
@@ -52,8 +54,8 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-        </body>
-      </html>
+      </body>
+    </html>
     </ClerkProvider>
   );
 }

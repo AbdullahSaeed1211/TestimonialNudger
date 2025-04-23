@@ -213,8 +213,8 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <div className="text-center mb-10">
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
+      <div className="text-center mb-8 sm:mb-10">
         {businessData.logo && (
           <div className="mb-4 flex justify-center">
             <Image 
@@ -244,7 +244,7 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
           <label className="block text-sm font-medium text-gray-700 mb-2">
             How would you rate your experience?*
           </label>
-          <div className="flex items-center">
+          <div className="flex items-center justify-center sm:justify-start">
             {[1, 2, 3, 4, 5].map((rating) => (
               <button
                 key={rating}
@@ -252,24 +252,17 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
                 onMouseEnter={() => setHoveredRating(rating)}
                 onMouseLeave={() => setHoveredRating(0)}
                 onClick={() => handleRatingClick(rating)}
-                className="p-1 focus:outline-none"
+                className="p-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full mr-1"
               >
                 <Star
-                  className={`h-8 w-8 ${
+                  className={`h-8 w-8 md:h-10 md:w-10 ${
                     rating <= (hoveredRating || currentRating)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300'
-                  }`}
+                  } transition-colors duration-150`}
                 />
               </button>
             ))}
-            <span className="ml-2 text-sm text-gray-500">
-              {currentRating > 0 && (
-                <span>
-                  You selected {currentRating} star{currentRating > 1 ? 's' : ''}
-                </span>
-              )}
-            </span>
           </div>
           {errors.rating && (
             <p className="mt-1 text-sm text-red-600">{errors.rating.message}</p>
@@ -278,116 +271,109 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
 
         {/* Testimonial Content */}
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
             Your Testimonial*
           </label>
           <textarea
             id="content"
-            rows={5}
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.content ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Please share your experience working with us..."
             {...register('content')}
-          ></textarea>
+            rows={5}
+            className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Share your experience with our service..."
+          />
           {errors.content && (
             <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>
           )}
-          <p className="mt-1 text-xs text-gray-500">
-            Your testimonial will help others understand the quality of our services
-          </p>
         </div>
 
-        {/* Contact Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Name and Role */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="clientName" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="clientName" className="block text-sm font-medium text-gray-700 mb-2">
               Your Name*
             </label>
             <input
               id="clientName"
               type="text"
-              className={`w-full px-4 py-2 border rounded-md ${
-                errors.clientName ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="How you'd like to be credited"
               {...register('clientName')}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="John Smith"
             />
             {errors.clientName && (
               <p className="mt-1 text-sm text-red-600">{errors.clientName.message}</p>
             )}
           </div>
-          
           <div>
-            <label htmlFor="clientRole" className="block text-sm font-medium text-gray-700 mb-1">
-              Your Title/Company (Optional)
+            <label htmlFor="clientRole" className="block text-sm font-medium text-gray-700 mb-2">
+              Your Role/Title (Optional)
             </label>
             <input
               id="clientRole"
               type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              placeholder="e.g. Marketing Director at XYZ Corp"
               {...register('clientRole')}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Marketing Director"
             />
           </div>
         </div>
 
         {/* Media Upload */}
         <div>
-          <span className="block text-sm font-medium text-gray-700 mb-1">
-            Add Photos or Videos (Optional)
-          </span>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Add Photos/Videos (Optional)
+          </label>
           <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
             <div className="space-y-1 text-center">
               <Upload className="mx-auto h-12 w-12 text-gray-400" />
-              <div className="flex text-sm text-gray-600">
+              <div className="flex flex-col sm:flex-row text-sm text-gray-600 items-center justify-center">
                 <label
                   htmlFor="file-upload"
-                  className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
+                  className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500 py-2 px-3"
                 >
-                  <span>Upload a file</span>
+                  <span>Upload files</span>
                   <input
                     id="file-upload"
-                    name="file-upload"
                     type="file"
-                    className="sr-only"
-                    accept="image/*,video/*"
                     multiple
+                    accept="image/*,video/*"
                     onChange={handleFileUpload}
+                    className="sr-only"
                   />
                 </label>
-                <p className="pl-1">or drag and drop</p>
+                <p className="pl-1 mt-2 sm:mt-0">or drag and drop</p>
               </div>
               <p className="text-xs text-gray-500">
-                PNG, JPG, GIF, MP4 up to 10MB
+                Images and videos up to 10MB
               </p>
             </div>
           </div>
 
+          {/* Preview uploaded files */}
           {uploadPreviews.length > 0 && (
-            <div className="mt-4 grid grid-cols-3 gap-4">
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {uploadPreviews.map((preview, index) => (
                 <div key={index} className="relative group">
-                  {preview.includes('video') ? (
-                    <video
-                      src={preview}
-                      className="h-24 w-full object-cover rounded-md"
-                      controls
-                    />
-                  ) : (
-                    <div className="relative h-24 w-full">
+                  {uploadedFiles[index].type.startsWith('image/') ? (
+                    <div className="h-24 w-full relative rounded-md overflow-hidden">
                       <Image
                         src={preview}
-                        alt={`Upload ${index + 1}`}
+                        alt={`Preview ${index}`}
                         fill
-                        className="object-cover rounded-md"
+                        className="object-cover"
                       />
+                    </div>
+                  ) : (
+                    <div className="h-24 w-full bg-gray-100 flex items-center justify-center rounded-md">
+                      <svg className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
                   )}
                   <button
                     type="button"
                     onClick={() => removeFile(index)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 group-hover:opacity-100 opacity-70"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -397,14 +383,14 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
           )}
         </div>
 
-        {/* Publishing Permission */}
+        {/* Permission to publish */}
         <div className="flex items-start">
           <div className="flex items-center h-5">
             <input
               id="allowPublishing"
               type="checkbox"
-              className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
               {...register('allowPublishing')}
+              className="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
             />
           </div>
           <div className="ml-3 text-sm">
@@ -412,19 +398,17 @@ export default function TestimonialFormPage({ params }: { params: { token: strin
               Allow publishing
             </label>
             <p className="text-gray-500">
-              I give permission to {businessData.name} to use my testimonial on their website and marketing materials.
+              I give permission to {businessData.name} to display this testimonial publicly.
             </p>
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full px-6 py-3 text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 ${
-              isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}
           </button>

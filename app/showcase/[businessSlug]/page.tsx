@@ -5,6 +5,14 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { RatingPicker } from '@/components/testimonial/RatingPicker';
+import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { Filter } from 'lucide-react';
 
 interface ShowcaseTestimonial {
   id: string;
@@ -93,18 +101,18 @@ function TestimonialCard({ testimonial }: { testimonial: ShowcaseTestimonial }) 
   };
   
   return (
-    <Card className="h-full flex flex-col">
-      <CardContent className="p-6 flex-grow flex flex-col">
+    <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
+      <CardContent className="p-4 sm:p-6 flex-grow flex flex-col">
         <div className="mb-4">
           <RatingPicker value={testimonial.rating} onChange={() => {}} readOnly size="sm" />
         </div>
         
-        <blockquote className="text-gray-700 flex-grow mb-4">
+        <blockquote className="text-gray-700 flex-grow mb-4 text-sm sm:text-base">
           &quot;{testimonial.content}&quot;
         </blockquote>
         
         <div className="flex items-center mt-auto pt-4 border-t">
-          <Avatar className="mr-3">
+          <Avatar className="mr-3 h-8 w-8 sm:h-10 sm:w-10">
             {testimonial.client.avatarUrl ? (
               <AvatarImage src={testimonial.client.avatarUrl} alt={testimonial.client.name} />
             ) : (
@@ -112,8 +120,8 @@ function TestimonialCard({ testimonial }: { testimonial: ShowcaseTestimonial }) 
             )}
           </Avatar>
           <div>
-            <div className="font-medium">{testimonial.client.name}</div>
-            <div className="text-sm text-gray-500">{testimonial.serviceType}</div>
+            <div className="font-medium text-sm sm:text-base">{testimonial.client.name}</div>
+            <div className="text-xs sm:text-sm text-gray-500">{testimonial.serviceType}</div>
           </div>
         </div>
         
@@ -140,6 +148,7 @@ export default function ShowcasePage({ params }: PageProps) {
   const [testimonials, setTestimonials] = useState<ShowcaseTestimonial[]>([]);
   const [businessData, setBusinessData] = useState<{ name: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [filterRating, setFilterRating] = useState<number | null>(null);
   
   useEffect(() => {
     // In a real app, fetch business and testimonials from API
@@ -177,6 +186,11 @@ export default function ShowcasePage({ params }: PageProps) {
     // fetchData();
   }, [params.businessSlug]);
   
+  // Filter testimonials by rating
+  const filteredTestimonials = filterRating
+    ? testimonials.filter(t => t.rating === filterRating)
+    : testimonials;
+  
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -186,23 +200,74 @@ export default function ShowcasePage({ params }: PageProps) {
   }
   
   return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-2">
+    <div className="container mx-auto py-8 sm:py-12 px-4">
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-2xl sm:text-4xl font-bold mb-2">
           What Our Clients Say About {businessData?.name}
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
           Read testimonials from our satisfied clients about their experiences working with us.
         </p>
       </div>
       
-      {testimonials.length === 0 ? (
+      {/* Mobile filtering */}
+      <div className="mb-6 flex justify-center">
+        <div className="sm:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                {filterRating === null ? 'All Ratings' : `${filterRating} Stars`}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              <DropdownMenuItem onClick={() => setFilterRating(null)}>
+                All Ratings
+              </DropdownMenuItem>
+              {[5, 4, 3].map(rating => (
+                <DropdownMenuItem key={rating} onClick={() => setFilterRating(rating)}>
+                  {rating} Stars
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        
+        {/* Desktop filtering */}
+        <div className="hidden sm:flex bg-white p-2 rounded-full shadow-md space-x-1">
+          <button 
+            onClick={() => setFilterRating(null)}
+            className={`px-4 py-2 rounded-full ${
+              filterRating === null 
+                ? 'bg-indigo-600 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            All
+          </button>
+          {[5, 4, 3].map(rating => (
+            <button
+              key={rating}
+              onClick={() => setFilterRating(rating)}
+              className={`px-4 py-2 rounded-full ${
+                filterRating === rating 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {rating}★
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      {filteredTestimonials.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500">No testimonials available yet.</p>
+          <p className="text-gray-500">No testimonials available for this filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map(testimonial => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {filteredTestimonials.map(testimonial => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
         </div>
