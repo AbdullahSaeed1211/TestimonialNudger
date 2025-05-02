@@ -1,12 +1,16 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Suspense } from 'react';
 import Navbar from './components/layout/Navbar';
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import { CookieConsent } from './components/analytics/CookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
+
+// Define fallback URL for deployments
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonial-nudger.vercel.app';
 
 // Enhanced metadata for better SEO
 export const metadata = {
@@ -21,13 +25,13 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com',
+    url: siteUrl,
     title: 'TestimonialNudger - Collect & Display Client Testimonials',
     description: 'Automate testimonial collection, manage client feedback, and showcase powerful social proof on your website.',
     siteName: 'TestimonialNudger',
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/og-image.jpg`,
+        url: `${siteUrl}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'TestimonialNudger - Testimonial Collection Platform',
@@ -38,7 +42,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'TestimonialNudger - Collect & Display Client Testimonials',
     description: 'Automate testimonial collection, manage client feedback, and showcase powerful social proof on your website.',
-    images: [`${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {
     index: true,
@@ -56,7 +60,10 @@ export const metadata = {
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-  manifest: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/site.webmanifest`,
+  manifest: `${siteUrl}/site.webmanifest`,
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({
@@ -68,7 +75,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <GoogleAnalytics />
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           <Navbar />
           <main>{children}</main>
           <footer className="bg-white border-t border-gray-200 py-8">

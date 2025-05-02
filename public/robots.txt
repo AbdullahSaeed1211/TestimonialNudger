@@ -8,4 +8,4 @@ Disallow: /sign-in
 Disallow: /sign-up
 
 # Sitemap location
-Sitemap: https://testimonialnudger.com/sitemap.xml 
+Sitemap: https://testimonial-nudger.vercel.app/sitemap.xml 
