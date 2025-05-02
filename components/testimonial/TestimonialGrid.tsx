@@ -59,7 +59,6 @@ export function TestimonialGrid({
           status={testimonial.status}
           rating={testimonial.rating}
           clientName={testimonial.client.name}
-          clientEmail={testimonial.client.email}
           clientAvatar={testimonial.client.avatarUrl}
           serviceType={testimonial.serviceType}
           createdAt={testimonial.createdAt}

@@ -84,8 +84,19 @@ export async function generateRequestEmail(serviceData: ServiceData, templateTyp
       }]
     });
 
-    // Return Claude's response or fall back to template
-    return response.content[0].text || templates[templateType](serviceData);
+    // Handle the Claude response format correctly
+    // Check if the response contains content and if first block is text
+    const firstBlock = response.content[0];
+    let textContent = '';
+    
+    if (firstBlock.type === 'text') {
+      textContent = firstBlock.text;
+    } else {
+      // If not a text block, fall back to template
+      textContent = templates[templateType](serviceData);
+    }
+    
+    return textContent;
   } catch (error) {
     console.error('Error generating testimonial request email:', error);
     // Return fallback template if AI generation fails
