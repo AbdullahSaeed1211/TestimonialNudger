@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import TestimonialFormClient from './TestimonialFormClient';
+import TestimonialFormClient from '@/app/testimonial-form/[token]/TestimonialFormClient';
 
 interface PageProps {
   params: Promise<{

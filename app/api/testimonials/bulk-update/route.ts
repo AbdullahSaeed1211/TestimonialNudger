@@ -4,6 +4,11 @@ import connectToDatabase from '@/lib/db/connect';
 import Testimonial, { TestimonialStatus } from '@/lib/db/models/Testimonial';
 import Business from '@/lib/db/models/Business';
 
+interface BulkUpdateRequest {
+  testimonialIds: string[];
+  action: 'approve' | 'reject' | 'archive';
+}
+
 // POST endpoint to bulk update testimonials (approve, reject, etc.)
 export async function POST(request: NextRequest) {
   try {
@@ -28,10 +33,10 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Parse request data
-    const data = await request.json();
-    const { testimonialIds, action } = data;
+    // Get the request body
+    const { testimonialIds, action }: BulkUpdateRequest = await request.json();
     
+    // Validate the request
     if (!testimonialIds || !Array.isArray(testimonialIds) || testimonialIds.length === 0) {
       return NextResponse.json(
         { error: 'No testimonial IDs provided' },
@@ -39,32 +44,21 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    if (!action || typeof action !== 'string') {
+    if (!action || !['approve', 'reject', 'archive'].includes(action)) {
       return NextResponse.json(
-        { error: 'Invalid action' },
+        { error: 'Invalid action. Must be "approve", "reject", or "archive"' },
         { status: 400 }
       );
     }
     
-    let newStatus: TestimonialStatus;
+    // Map the action to a status
+    const statusMap: Record<string, TestimonialStatus> = {
+      'approve': 'APPROVED',
+      'reject': 'FLAGGED',
+      'archive': 'ARCHIVED' as TestimonialStatus
+    };
     
-    // Determine the new status based on the action
-    switch (action.toUpperCase()) {
-      case 'APPROVE':
-        newStatus = 'APPROVED';
-        break;
-      case 'FLAG':
-        newStatus = 'FLAGGED';
-        break;
-      case 'PENDING':
-        newStatus = 'PENDING';
-        break;
-      default:
-        return NextResponse.json(
-          { error: 'Invalid action. Must be one of: APPROVE, FLAG, PENDING' },
-          { status: 400 }
-        );
-    }
+    const status = statusMap[action];
     
     // Update all testimonials that belong to this business
     const result = await Testimonial.updateMany(
@@ -72,19 +66,17 @@ export async function POST(request: NextRequest) {
         _id: { $in: testimonialIds },
         business: business._id
       },
-      { $set: { status: newStatus } }
+      { $set: { status } }
     );
     
     return NextResponse.json({
       success: true,
-      message: `${result.modifiedCount} testimonials updated successfully`,
-      data: {
-        modifiedCount: result.modifiedCount,
-        status: newStatus
-      }
+      message: `Updated ${result.modifiedCount} testimonials with status: ${status}`,
+      totalRequested: testimonialIds.length,
+      modifiedCount: result.modifiedCount
     });
   } catch (error) {
-    console.error('Error updating testimonials:', error);
+    console.error('Error performing bulk update:', error);
     return NextResponse.json(
       { error: 'Failed to update testimonials' },
       { status: 500 }

@@ -6,6 +6,7 @@ import Business from '@/lib/db/models/Business';
 import TestimonialToken from '@/lib/db/models/TestimonialToken';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { sendThankYouEmail } from '@/lib/email/sendThankYouEmail';
+import { sendNewTestimonialNotification } from '@/lib/services/notification-service';
 
 // POST endpoint to create a new testimonial
 export async function POST(request: NextRequest) {
@@ -139,6 +140,23 @@ export async function POST(request: NextRequest) {
         logoUrl: business.logoUrl,
         personalNote,
       });
+    }
+    
+    // Send notification to business owner
+    const businessOwner = await User.findById(business.owner);
+    if (businessOwner) {
+      await sendNewTestimonialNotification(
+        {
+          authorName: clientName,
+          authorEmail: clientEmail,
+          authorCompany: clientRole,
+          content: testimonial.content,
+          rating: testimonial.rating || 0,
+          mediaUrls: testimonial.mediaUrls
+        },
+        businessOwner.email,
+        business.name
+      );
     }
     
     // Return the created testimonial

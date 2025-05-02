@@ -106,7 +106,7 @@ export function Sidebar({ className }: SidebarProps) {
       >
         <div className="flex flex-col h-full">
           <div className="p-5 border-b border-gray-200 flex items-center justify-between">
-            <Logo height={36} href="/dashboard" className="hover:opacity-80 transition-opacity" />
+            <Logo height={130} href="/dashboard" className="hover:opacity-80 transition-opacity" />
             
             {/* Close button - only visible on mobile */}
             <button
