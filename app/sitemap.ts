@@ -1,6 +1,12 @@
-import type { MetadataRoute } from 'next';
+// Fix MetadataRoute import for Next.js 15
+type Sitemap = Array<{
+  url: string;
+  lastModified?: string | Date;
+  changeFrequency?: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+  priority?: number;
+}>;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default function sitemap(): Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com';
   
   const routes = [

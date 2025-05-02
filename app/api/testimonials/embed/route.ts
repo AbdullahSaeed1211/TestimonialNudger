@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/connect';
 import Testimonial from '@/lib/db/models/Testimonial';
 import Business from '@/lib/db/models/Business';
-import User from '@/lib/db/models/User';
 
 // Add CORS headers to allow embedding on any website
 export async function OPTIONS() {
@@ -60,14 +59,20 @@ export async function GET(request: NextRequest) {
     // Transform testimonials for client consumption
     const formattedTestimonials = testimonials.map(t => {
       const testimonial = t.toObject();
+      // Safely handle client properties in case client is just an ObjectId or null
+      const clientName = testimonial.client && typeof testimonial.client === 'object' && 'name' in testimonial.client 
+        ? testimonial.client.name 
+        : 'Anonymous';
+      
       return {
         _id: testimonial._id,
         content: testimonial.content,
-        rating: testimonial.rating,
-        authorName: testimonial.client.name || 'Anonymous',
-        authorCompany: testimonial.clientCompany,
-        authorAvatar: testimonial.clientAvatar,
-        mediaUrls: testimonial.mediaUrls,
+        rating: testimonial.rating || 5,
+        authorName: clientName,
+        // Since these properties don't exist in the model, provide defaults
+        authorCompany: 'clientCompany' in testimonial ? testimonial.clientCompany : '',
+        authorAvatar: 'clientAvatar' in testimonial ? testimonial.clientAvatar : '',
+        mediaUrls: testimonial.mediaUrls || [],
         createdAt: testimonial.createdAt,
       };
     });

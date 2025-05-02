@@ -101,7 +101,7 @@ export default function TestimonialEmbed({
                 key={testimonial._id} 
                 className={`tn-slide ${index === activeSlide ? 'tn-active' : ''}`}
               >
-                <div className="tn-content">"{testimonial.content}"</div>
+                <div className="tn-content">&ldquo;{testimonial.content}&rdquo;</div>
                 
                 {showRating && (
                   <div className="tn-rating">
@@ -150,7 +150,7 @@ export default function TestimonialEmbed({
         <div className="tn-grid">
           {testimonials.map((testimonial) => (
             <div key={testimonial._id} className="tn-grid-item">
-              <div className="tn-content">"{testimonial.content}"</div>
+              <div className="tn-content">&ldquo;{testimonial.content}&rdquo;</div>
               
               {showRating && (
                 <div className="tn-rating">
@@ -187,7 +187,7 @@ export default function TestimonialEmbed({
         <div className="tn-list">
           {testimonials.map((testimonial) => (
             <div key={testimonial._id} className="tn-list-item">
-              <div className="tn-content">"{testimonial.content}"</div>
+              <div className="tn-content">&ldquo;{testimonial.content}&rdquo;</div>
               
               {showRating && (
                 <div className="tn-rating">

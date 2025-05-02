@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface UploadResult {
   success: boolean;
@@ -108,22 +109,28 @@ export default function CloudinaryTestPage() {
           {result.uploadResult?.url && result.uploadResult.resourceType === 'image' && (
             <div className="mt-4">
               <p className="font-medium mb-2">Uploaded Image:</p>
-              <img 
-                src={result.uploadResult.url} 
-                alt="Uploaded" 
-                className="max-w-full h-auto rounded-md border border-gray-200" 
-              />
+              <div className="relative w-full h-64">
+                <Image 
+                  src={result.uploadResult.url} 
+                  alt="Uploaded" 
+                  fill
+                  className="object-contain rounded-md border border-gray-200" 
+                />
+              </div>
             </div>
           )}
           
           {result.transformations?.thumbnail && (
             <div className="mt-4">
               <p className="font-medium mb-2">Thumbnail:</p>
-              <img 
-                src={result.transformations.thumbnail} 
-                alt="Thumbnail" 
-                className="rounded-md border border-gray-200" 
-              />
+              <div className="relative w-48 h-48">
+                <Image 
+                  src={result.transformations.thumbnail} 
+                  alt="Thumbnail" 
+                  fill
+                  className="object-contain rounded-md border border-gray-200" 
+                />
+              </div>
             </div>
           )}
         </div>
