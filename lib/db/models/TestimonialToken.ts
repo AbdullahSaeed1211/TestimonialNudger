@@ -25,8 +25,9 @@ const TestimonialTokenSchema = new Schema<ITestimonialToken>(
   { timestamps: true }
 );
 
-// Create index for token lookup
-TestimonialTokenSchema.index({ token: 1 });
+// Remove the duplicate index for token since unique: true already creates an index
+// TestimonialTokenSchema.index({ token: 1 });
+
 // Create index for expiration and used status for cleanup operations
 TestimonialTokenSchema.index({ expiresAt: 1, isUsed: 1 });
 

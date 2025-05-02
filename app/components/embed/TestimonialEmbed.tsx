@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
+import Image from 'next/image';
 
 interface Testimonial {
   _id: string;
@@ -91,6 +92,23 @@ export default function TestimonialEmbed({
     );
   }
 
+  // Helper function to render author avatar
+  const renderAvatar = (testimonial: Testimonial) => {
+    if (!testimonial.authorAvatar) return null;
+    
+    return (
+      <div className="tn-avatar-container relative h-10 w-10 rounded-full overflow-hidden">
+        <Image 
+          src={testimonial.authorAvatar} 
+          alt={testimonial.authorName}
+          fill
+          className="object-cover"
+          sizes="40px"
+        />
+      </div>
+    );
+  };
+
   return (
     <div className={`tn-testimonial-embed ${themeClass}`}>
       {layout === 'carousel' && (
@@ -115,13 +133,7 @@ export default function TestimonialEmbed({
                 )}
                 
                 <div className="tn-author">
-                  {testimonial.authorAvatar && (
-                    <img 
-                      src={testimonial.authorAvatar} 
-                      alt={testimonial.authorName} 
-                      className="tn-avatar"
-                    />
-                  )}
+                  {testimonial.authorAvatar && renderAvatar(testimonial)}
                   <div className="tn-author-info">
                     <div className="tn-name">{testimonial.authorName}</div>
                     {testimonial.authorCompany && (
@@ -164,13 +176,7 @@ export default function TestimonialEmbed({
               )}
               
               <div className="tn-author">
-                {testimonial.authorAvatar && (
-                  <img 
-                    src={testimonial.authorAvatar} 
-                    alt={testimonial.authorName} 
-                    className="tn-avatar"
-                  />
-                )}
+                {testimonial.authorAvatar && renderAvatar(testimonial)}
                 <div className="tn-author-info">
                   <div className="tn-name">{testimonial.authorName}</div>
                   {testimonial.authorCompany && (
@@ -201,13 +207,7 @@ export default function TestimonialEmbed({
               )}
               
               <div className="tn-author">
-                {testimonial.authorAvatar && (
-                  <img 
-                    src={testimonial.authorAvatar} 
-                    alt={testimonial.authorName} 
-                    className="tn-avatar"
-                  />
-                )}
+                {testimonial.authorAvatar && renderAvatar(testimonial)}
                 <div className="tn-author-info">
                   <div className="tn-name">{testimonial.authorName}</div>
                   {testimonial.authorCompany && (
