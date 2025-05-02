@@ -12,16 +12,17 @@ export default function DashboardLayout({
 }) {
   // Use useEffect to hide global navbar on dashboard pages
   useEffect(() => {
-    const navbar = document.querySelector('nav.global-navbar');
+    // Get the navbar by its class
+    const navbar = document.querySelector('nav.global-navbar') as HTMLElement;
     if (navbar) {
-      navbar.classList.add('hidden');
+      navbar.style.display = 'none';
     }
     
     // Cleanup function to show navbar when navigating away
     return () => {
-      const navbar = document.querySelector('nav.global-navbar');
+      const navbar = document.querySelector('nav.global-navbar') as HTMLElement;
       if (navbar) {
-        navbar.classList.remove('hidden');
+        navbar.style.display = '';
       }
     };
   }, []);
@@ -40,7 +41,7 @@ export default function DashboardLayout({
           <h1 className="md:hidden text-xl font-semibold text-gray-800">
             Testimonial Nudger
           </h1>
-          <UserButton />
+          <UserButton afterSignOutUrl="/" showName={true} />
         </header>
         
         {/* Main content */}

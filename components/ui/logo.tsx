@@ -17,7 +17,7 @@ export function Logo({
   const logoContent = (
     <div className={`flex items-center group ${className}`}>
       <Image
-        src="/public/TestiomonialNudger.png"
+        src="/TestiomonialNudger.png"
         alt="Testimonial Nudger"
         width={height}
         height={height}
