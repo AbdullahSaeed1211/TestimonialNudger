@@ -15,6 +15,9 @@ export async function OPTIONS() {
   });
 }
 
+// Add cache revalidation period - testimonials are unlikely to change often
+export const revalidate = 3600; // Revalidate at most every hour
+
 export async function GET(request: NextRequest) {
   try {
     // Extract query parameters
@@ -77,14 +80,14 @@ export async function GET(request: NextRequest) {
       };
     });
     
-    // Return the testimonials with CORS headers
+    // Return the testimonials with CORS headers and stronger caching
     return NextResponse.json({ 
       testimonials: formattedTestimonials,
       businessName: business.name,
     }, {
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=300', // Cache for 5 minutes
+        'Cache-Control': 'public, max-age=3600, s-maxage=7200, stale-while-revalidate=86400', // Cache for 1 hour browser, 2 hours CDN, stale for 24 hours
       },
     });
   } catch (error) {

@@ -3,12 +3,60 @@ import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import Navbar from './components/layout/Navbar';
 import { Toaster } from "@/components/ui/sonner";
+import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
+import { CookieConsent } from './components/analytics/CookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Enhanced metadata for better SEO
 export const metadata = {
-  title: 'TestimonialNudger - Collect and Showcase Testimonials',
-  description: 'Collect and showcase client testimonials with ease',
+  title: {
+    default: 'TestimonialNudger - Collect & Display Client Testimonials',
+    template: '%s | TestimonialNudger'
+  },
+  description: 'Automate testimonial collection, manage client feedback, and showcase powerful social proof on your website with TestimonialNudger.',
+  keywords: ['testimonials', 'client feedback', 'social proof', 'reviews', 'testimonial collection', 'business growth'],
+  authors: [{ name: 'TestimonialNudger Team' }],
+  creator: 'TestimonialNudger',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com',
+    title: 'TestimonialNudger - Collect & Display Client Testimonials',
+    description: 'Automate testimonial collection, manage client feedback, and showcase powerful social proof on your website.',
+    siteName: 'TestimonialNudger',
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'TestimonialNudger - Testimonial Collection Platform',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TestimonialNudger - Collect & Display Client Testimonials',
+    description: 'Automate testimonial collection, manage client feedback, and showcase powerful social proof on your website.',
+    images: [`${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/og-image.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://testimonialnudger.com'}/site.webmanifest`,
 };
 
 export default function RootLayout({
@@ -18,11 +66,11 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-    <html lang="en">
+      <html lang="en">
         <body className={inter.className}>
+          <GoogleAnalytics />
           <Navbar />
           <main>{children}</main>
-          <Toaster position="top-right" closeButton richColors />
           <footer className="bg-white border-t border-gray-200 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="md:flex md:items-center md:justify-between">
@@ -54,8 +102,10 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-      </body>
-    </html>
+          <Toaster position="top-right" closeButton richColors />
+          <CookieConsent />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
