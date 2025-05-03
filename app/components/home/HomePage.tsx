@@ -575,20 +575,28 @@ export default function HomePage() {
                 <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-4"></div>
                 <div className="bg-white rounded-md flex-1 py-1 px-3 text-sm text-gray-500 border border-gray-200">
-                  app.testimonial-nudger.com/dashboard
+                  testimonial-nudger.com/dashboard
                 </div>
               </div>
             </div>
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-semibold text-lg">Recent Testimonials</h3>
-                <button className="text-sm bg-indigo-50 text-indigo-600 py-1 px-3 rounded-md font-medium">View All</button>
+                <button className="text-sm text-indigo-600 py-1 px-3 rounded-md font-medium hover:underline">View All</button>
               </div>
               <div className="space-y-4">
                 {/* Sample Dashboard Data */}
                 <div className="flex justify-between items-center border-b border-gray-100 pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
+                      <Image 
+                        src="/user2.png" 
+                        alt="John D."
+                        width={40}
+                        height={40}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                     <div>
                       <p className="font-medium text-sm">John D.</p>
                       <div className="flex">
@@ -599,13 +607,21 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="text-xs bg-green-50 text-green-600 py-1 px-2 rounded">Approved</button>
-                    <button className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded">View</button>
+                    <span className="text-xs text-green-600 py-1 px-2 font-medium">Approved</span>
+                    <button className="text-xs text-gray-600 py-1 px-2 border border-gray-200 rounded hover:bg-gray-50">View</button>
                   </div>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
+                      <Image 
+                        src="/user3.png" 
+                        alt="Lisa M."
+                        width={40}
+                        height={40}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                     <div>
                       <p className="font-medium text-sm">Lisa M.</p>
                       <div className="flex">
@@ -616,13 +632,21 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="text-xs bg-yellow-50 text-yellow-600 py-1 px-2 rounded">Pending</button>
-                    <button className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded">View</button>
+                    <span className="text-xs text-amber-600 py-1 px-2 font-medium">Pending</span>
+                    <button className="text-xs text-gray-600 py-1 px-2 border border-gray-200 rounded hover:bg-gray-50">View</button>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
+                      <Image 
+                        src="/user4.png" 
+                        alt="Robert K."
+                        width={40}
+                        height={40}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                     <div>
                       <p className="font-medium text-sm">Robert K.</p>
                       <div className="flex">
@@ -634,8 +658,8 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="text-xs bg-green-50 text-green-600 py-1 px-2 rounded">Approved</button>
-                    <button className="text-xs bg-gray-100 text-gray-600 py-1 px-2 rounded">View</button>
+                    <span className="text-xs text-green-600 py-1 px-2 font-medium">Approved</span>
+                    <button className="text-xs text-gray-600 py-1 px-2 border border-gray-200 rounded hover:bg-gray-50">View</button>
                   </div>
                 </div>
               </div>
